@@ -1,0 +1,74 @@
+@isTest
+public class TestSeedStudentApplicationController {
+    @testSetup static void setup(){
+        //create account data properly
+        //take refernce of https://societycrm--seed2.my.salesforce.com/0037A00000Yl5Nl
+  		//exact data from UI
+        Account acc = new Account();
+        acc.Name = 'Palash Manna';
+        insert acc;
+       
+        //create proper contact record with proper data 
+        //https://societycrm--seed2.my.salesforce.com/0037A00000cMk11
+        contact con = new contact(LastName = 'Manna', accountId = acc.Id,MailingLongitude=42.730534,MailingLatitude=73.684563);
+        insert con;
+       //create application record with proper field take refrence of 
+       //https://societycrm--seed2.my.salesforce.com/a1W7A000001ESJzUAO
+       Application_Form__c appform = new  Application_Form__c();
+        appform.Student__c = con.Id;
+        insert appform;
+       //create project record
+		SEED_Project__c seedproject = new SEED_Project__c();  
+        seedproject.Name = 'Benchmarking computational predictions of solvatochromism';
+    
+        
+       //https://societycrm--seed2.my.salesforce.com/a1T7A000001ovD0UAI
+        
+    }
+    public static testmethod void StudentApplicationController(){
+        // Setup test data
+        // Create a unique UserName
+        String uniqueUserName = 'PalashManna' + DateTime.now().getTime() + '@testorg.com';
+        // This code runs as the system user
+        Profile p = [SELECT Id FROM Profile WHERE Name='CPT Portal Partner Community User'];
+        UserRole userrole = [Select Id, DeveloperName From UserRole Where DeveloperName = 'Technology_Admin' Limit 1];
+        User adminUser = [Select Id, UserRoleId From User Where Profile.Name='System Administrator' Limit 1];
+        adminUser.UserRoleId = userRole.Id;
+        update adminUser;
+
+        contact con = [SELECT Id FROM Contact Where LastName ='Manna'];
+        User u = new User(Alias = 'standt', Email='standarduser@testorg.com',
+                          EmailEncodingKey='UTF-8', LastName='Testing', LanguageLocaleKey='en_US',
+                          LocaleSidKey='en_US', ProfileId = p.Id,
+                          TimeZoneSidKey='America/Los_Angeles',
+                          UserName=uniqueUserName,ContactId = con.Id);
+       
+        
+        
+        
+        
+        System.runAs(u) {
+            SEED_Project__c seedproject = new SEED_Project__c();
+            insert seedproject;
+            
+            
+            
+            
+            SeedStudentApplicationController.FetchDetails seedstdfetchdet = new  SeedStudentApplicationController.FetchDetails();
+           // seedstdfetchdet.fetchEssayQuestions = false;
+           seedstdfetchdet.fetchEssayQuestions = true;
+            //seedstdfetchdet.fetchListOfSites = false;
+            seedstdfetchdet.fetchListOfSites = true;
+            seedstdfetchdet.fetchSiteDetails = false;
+            String str = JSON.serialize(seedstdfetchdet);
+            test.startTest();
+            SeedStudentApplicationController.getStudentApplicationDetails(str);
+           // SeedStudentApplicationController.getSiteDetails(7.1,34);
+           SeedStudentApplicationController.getSiteDetails(42.730534,-73.684563);
+           // SeedStudentApplicationController.getEssayQuestions();
+           
+            test.stoptest();
+        }
+    }
+    
+}
