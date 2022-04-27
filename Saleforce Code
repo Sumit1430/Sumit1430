@@ -1,0 +1,18 @@
+< lessThan
+<= lessthanequals
+> greater 
+>= greater than equals
+!= Not Equals
+Equals()methods->Which uses the binary Comparison
+-----------------------------------------------------
+AND (&&) returns True if all the conditions are Satisified or else it returns False
+OR(ll) it returns True if any Conditions satisfied Else it returns false
+NOT(!) it will change the Sign of the Condition Result
+-------------------
+++ it will Increment the value by 1
+-- It will decrement the value by 1
+-----------------------
+Assigning the value 
+integer FirstNumber =100;
+FirstNumber +=230; value is 330;
+firstNumber -=20; value is 80;
